@@ -15,7 +15,7 @@ namespace MoreVehiclesRenew2
         private bool isPatched = false;
 
         public string Name => Constants.ModName;
-        public string Description => "Increases maximum allowed active & parked vehicles to 65,536 each (131,072 total). Independent Renew 2 edition by NgocDuy.";
+        public string Description => "65K Active / 131K Total Vehicles + Turbo Spawn, Ghost Vehicle Eliminator & Smart Logistics (260K throughput). Renew 2 by NgocDuy.";
 
         public void OnEnabled()
         {
@@ -67,7 +67,13 @@ namespace MoreVehiclesRenew2
                 VehiclePatch.GetTargetFrame,
                 VehicleLinkedListPatch.EndRenderingImpl,
                 VehicleLinkedListPatch.PlayAudioImpl,
-                VehicleLinkedListPatch.ReleaseVehicleImplementation
+                VehicleLinkedListPatch.ReleaseVehicleImplementation,
+                // Breakthrough 1: Ghost Vehicle Annihilator on Demolished Roads
+                MoreVehiclesRenew2.Breakthroughs.GhostVehicleAnnihilator.ReleaseSegmentPatch,
+                // Breakthrough 2: Turbo Spawner on Transfer Matching
+                MoreVehiclesRenew2.Breakthroughs.TurboSpawnDispatcher.SimulationStepPatch,
+                // Breakthrough 3: Emergency Vehicle Slot Reclaimer
+                MoreVehiclesRenew2.Breakthroughs.EmergencySlotReclaimer.CreateVehiclePatch
             };
 
             patcher = new MethodPatcher(Constants.HarmonyId, array);
@@ -138,6 +144,9 @@ namespace MoreVehiclesRenew2
                 metaData.m_modOverride[Constants.MetadataModNameRenew2] = true;
                 Log.Info("More Vehicles Renew 2 recorded mod overrides in SimulationMetaData.");
             }
+
+            // Breakthrough 4: Apply Smart Logistics Multiplier (2x freight & service vehicle capacity)
+            MoreVehiclesRenew2.Breakthroughs.SmartLogisticsMultiplier.ApplyLogisticsBoost();
         }
 
         private void ModsChanged()

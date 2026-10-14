@@ -243,6 +243,15 @@ namespace MoreVehiclesRenew2.Patches
                     Constants.VanillaMaxVehicleCount,
                     Constants.ModdedMaxVehicleCount);
             }
+
+            private static void Postfix(int subStep)
+            {
+                if (subStep != 0)
+                {
+                    int frame = (int)(Singleton<SimulationManager>.instance.m_currentFrameIndex & 0xF);
+                    MoreVehiclesRenew2.Breakthroughs.GhostVehicleAnnihilator.InspectAndCleanFrameSlice(frame * 4096, (frame + 1) * 4096);
+                }
+            }
         }
 
         public static IPatch DataDeserialize { get; } = new VehicleManager_Data_Deserialize();

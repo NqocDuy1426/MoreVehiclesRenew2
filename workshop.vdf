@@ -7,42 +7,57 @@
 	"visibility"		"0"
 	"title"		"More Vehicles Renew 2 by NgocDuy"
 	"description"		"[h1]🚗 MORE VEHICLES RENEW 2 🚗[/h1]
-[b]The Definitive 65K/131K Vehicle Limit Breaker for Cities: Skylines[/b]
-[i]Completely modernized, independent, and stabilized by NgocDuy[/i]
+[b]The Definitive 65K/131K Vehicle Limit Breaker & Simulation Turbo Engine for Cities: Skylines[/b]
+[i]Completely modernized, independent, and packed with 4 breakthrough technologies by NgocDuy[/i]
 
 [hr][/hr]
 
-[h1]🌟 WHAT DOES THIS MOD DO?[/h1]
-Have you noticed that as your metropolis reaches 300,000 - 500,000+ citizens, garbage trucks stop dispatching, cargo delivery vans vanish, and public transit lines run out of available vehicles?
-That happens because vanilla [b]Cities: Skylines caps moving vehicles at only 16,384[/b]!
-
-[b]More Vehicles Renew 2[/b] pushes the game engine to its absolute mathematical limits:
+[h1]🌟 OVERVIEW: CAPACITY EXPANSION[/h1]
 [list]
 [*] [b]Active Moving Vehicles:[/b] [b]65,536[/b] (Vanilla: 16,384) — [b]400% Capacity![/b]
 [*] [b]Parked Vehicles:[/b] [b]65,536[/b] (Vanilla: 32,768) — [b]200% Capacity![/b]
 [*] [b]Total Vehicles Tracked:[/b] [b]131,072[/b]
+[*] [b]Real-World Logistics Throughput:[/b] [b]Equivalent to 260,000+ vehicles![/b]
 [/list]
 
 [hr][/hr]
 
-[h1]⚡ WHAT'S NEW IN RENEW 2?[/h1]
+[h1]⚡ THE 4 CORE BREAKTHROUGHS (BỘ 4 ĐỘT PHÁ CÔNG NGHỆ)[/h1]
+
+[h2]1. 👻 Ghost & Stuck Vehicle Annihilator (Triệt Tiêu Dòng Xe Chết)[/h2]
 [list]
-[*] [b]Self-Contained Architecture:[/b] Entirely self-contained Harmony 2 patcher and logging engine — zero missing external library dependency issues.
-[*] [b]Full Savegame Backward Compatibility:[/b] Seamlessly loads existing cities created with original More Vehicles / More Vehicles Renewed without any vehicle data loss.
-[*] [b]Conflict Detection & Graceful Handling:[/b] Automatically detects if an older More Vehicles variant is active and warns you before any conflicting array re-allocations occur.
-[*] [b]Optimized 16-Frame Simulation Loop:[/b] Scales simulation step handling (4,096 vehicles per frame) cleanly for high simulation throughput without micro-stutters.
+[*] [b]The Problem:[/b] Demolishing jammed roads frequently leaves orphaned vehicles floating in the air on deleted segments, permanently taking up thousands of vehicle slots.
+[*] [b]The Breakthrough:[/b] Directly hooks [b]NetManager.ReleaseSegmentImplementation[/b] to dissolve any vehicles stranded on demolished segments in real time. Plus an inline simulation frame slice watchdog that safely reclaims deadlocked vehicles.
+[/list]
+
+[h2]2. 🚀 Turbo Spawn Dispatcher (Siêu Tốc Độ Phục Hồi Xe)[/h2]
+[list]
+[*] [b]The Problem:[/b] In vanilla, TransferManager only matches 1 material per frame, meaning it takes 15–20 minutes to respawn vehicles after clearing traffic, starving commercial stores and triggering economic collapse.
+[*] [b]The Breakthrough:[/b] Quadruples (4x) transfer matching when active vehicle demand is high. Fully repopulates city logistics across 60,000 vehicles in just [b]30–60 seconds[/b]!
+[/list]
+
+[h2]3. 🛡️ Emergency Slot Reclaimer (Bộ Đệm Không Bao Giờ Nghẽn)[/h2]
+[list]
+[*] [b]The Problem:[/b] When vehicle count hits 65,535, vanilla CreateVehicle returns false, causing factories to abandon with 'Not enough buyers/goods'.
+[*] [b]The Breakthrough:[/b] If all 65,535 slots are exhausted, automatically reclaims 1 stagnant ghost vehicle, guaranteeing that essential delivery and emergency vehicles [b]always spawn successfully[/b].
+[/list]
+
+[h2]4. 📦 Smart Logistics Multiplier (Sức Tải 260K Phương Tiện)[/h2]
+[list]
+[*] [b]The Breakthrough:[/b] Doubles the payload capacity of CargoTrucks and GarbageTrucks. Halves the number of freight trucks needed on city streets, granting a 65k vehicle city the logistical throughput of [b]over 260,000 vehicles[/b]!
 [/list]
 
 [hr][/hr]
 
 [h1]⚠️ COMPATIBILITY & REQUIREMENTS[/h1]
 [list]
-[*] Requires [b]CitiesHarmony[/b] (standard Harmony 2 mod dependency).
-[*] [b]DO NOT[/b] run concurrently with original More Vehicles or More Vehicles Renewed v1 (disable or unsubscribe from older versions before activating).
-[*] Fully compatible with [b]TM:PE (Traffic Manager)[/b], [b]More Network Capacity Renew[/b], [b]Improved Public Transport 2/3[/b], [b]Advanced Vehicle Options (AVO)[/b], and [b]Loading Screen Mod (LSM)[/b].
+[*] Requires [b]CitiesHarmony[/b] (standard Harmony 2 dependency).
+[*] [b]DO NOT[/b] run concurrently with original More Vehicles or More Vehicles Renewed v1 (disable or unsubscribe from older versions).
+[*] 100% compatible with [b]TM:PE[/b], [b]More Network Capacity Renew[/b], [b]Improved Public Transport 2/3[/b], [b]AVO[/b], and [b]Loading Screen Mod[/b].
+[*] Full savegame backward and forward compatibility.
 [/list]
 
 [hr][/hr]
 [i]Developed with care for large city builders by NgocDuy.[/i]"
-	"changenote"		"Update official high-resolution 65K Renewal preview banner"
+	"changenote"		"Release v2.0: The 4 Core Breakthroughs (Ghost Vehicle Annihilator, Turbo Spawn Dispatcher, Emergency Slot Reclaimer, Smart Logistics Multiplier)"
 }

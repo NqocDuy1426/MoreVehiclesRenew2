@@ -38,6 +38,11 @@ cp "$CITIES_HARMONY_API_DLL" "$MOD_DIR/"
 
 [ -f preview-image.png ] && cp preview-image.png "$MOD_DIR/"
 
+echo "3️⃣ Deploying to SteamCMD content staging ($SCRIPT_DIR/content)..."
+mkdir -p "$SCRIPT_DIR/content"
+cp "$MOD_NAME.dll" "$SCRIPT_DIR/content/"
+cp "$CITIES_HARMONY_API_DLL" "$SCRIPT_DIR/content/"
+
 echo "=========================================================="
 echo "🎉 DEPLOYMENT COMPLETE!"
 echo "Files in $MOD_DIR:"

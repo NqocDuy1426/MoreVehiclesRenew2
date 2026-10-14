@@ -1,0 +1,48 @@
+"workshopitem"
+{
+	"appid" "255710"
+	"publishedfileid" "0"
+	"contentfolder" "/Users/nqocduy/CS_MoreVehiclesRenew2/content"
+	"previewfile" "/Users/nqocduy/CS_MoreVehiclesRenew2/preview-image.png"
+	"visibility" "0"
+	"title" "More Vehicles Renew 2 by NgocDuy"
+	"description" "[h1]🚗 MORE VEHICLES RENEW 2 🚗[/h1]
+[b]The Definitive 65K/131K Vehicle Limit Breaker for Cities: Skylines[/b]
+[i]Completely modernized, independent, and stabilized by NgocDuy[/i]
+
+[hr][/hr]
+
+[h1]🌟 WHAT DOES THIS MOD DO?[/h1]
+Have you noticed that as your metropolis reaches 300,000 - 500,000+ citizens, garbage trucks stop dispatching, cargo delivery vans vanish, and public transit lines run out of available vehicles?
+That happens because vanilla [b]Cities: Skylines caps moving vehicles at only 16,384[/b]!
+
+[b]More Vehicles Renew 2[/b] pushes the game engine to its absolute mathematical limits:
+[list]
+[*] [b]Active Moving Vehicles:[/b] [b]65,536[/b] (Vanilla: 16,384) — [b]400% Capacity![/b]
+[*] [b]Parked Vehicles:[/b] [b]65,536[/b] (Vanilla: 32,768) — [b]200% Capacity![/b]
+[*] [b]Total Vehicles Tracked:[/b] [b]131,072[/b]
+[/list]
+
+[hr][/hr]
+
+[h1]⚡ WHAT'S NEW IN RENEW 2?[/h1]
+[list]
+[*] [b]Self-Contained Architecture:[/b] Entirely self-contained Harmony 2 patcher and logging engine — zero missing external library dependency issues.
+[*] [b]Full Savegame Backward Compatibility:[/b] Seamlessly loads existing cities created with original More Vehicles / More Vehicles Renewed without any vehicle data loss.
+[*] [b]Conflict Detection & Graceful Handling:[/b] Automatically detects if an older More Vehicles variant is active and warns you before any conflicting array re-allocations occur.
+[*] [b]Optimized 16-Frame Simulation Loop:[/b] Scales simulation step handling (4,096 vehicles per frame) cleanly for high simulation throughput without micro-stutters.
+[/list]
+
+[hr][/hr]
+
+[h1]⚠️ COMPATIBILITY & REQUIREMENTS[/h1]
+[list]
+[*] Requires [b]CitiesHarmony[/b] (standard Harmony 2 mod dependency).
+[*] [b]DO NOT[/b] run concurrently with original More Vehicles or More Vehicles Renewed v1 (disable or unsubscribe from older versions before activating).
+[*] Fully compatible with [b]TM:PE (Traffic Manager)[/b], [b]More Network Capacity Renew[/b], [b]Improved Public Transport 2/3[/b], [b]Advanced Vehicle Options (AVO)[/b], and [b]Loading Screen Mod (LSM)[/b].
+[/list]
+
+[hr][/hr]
+[i]Developed with care for large city builders by NgocDuy.[/i]"
+	"changenote" "Initial release: More Vehicles Renew 2 by NgocDuy"
+}

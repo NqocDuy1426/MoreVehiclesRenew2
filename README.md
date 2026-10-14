@@ -8,6 +8,9 @@ Expands the hardcoded base game vehicle limits to the maximum mathematical bound
 - **Parked Vehicles**: `65,536` (Vanilla: `32,768`) — $2\times$ capacity!
 - **Total Tracked Vehicles**: **131,072**!
 
+- **Steam Workshop**: [3819832722](https://steamcommunity.com/sharedfiles/filedetails/?id=3819832722)
+- **GitHub Repository**: [NqocDuy1426/MoreVehiclesRenew2](https://github.com/NqocDuy1426/MoreVehiclesRenew2)
+
 ## ⚙️ Key Technical Details
 - **Architecture**: In Cities: Skylines 1, entity references (Citizen, Building, NetLane, Vehicle linkage) use unmanaged 16-bit unsigned integers (`ushort`, max value `65,535`). More Vehicles Renew 2 scales arrays to this absolute maximum ceiling ($2^{16}$).
 - **Backwards & Forwards Compatible**: Reads and writes both `User/More Vehicles` (legacy) and `User/More Vehicles Renew 2` simulation metadata, allowing existing cities created with previous More Vehicles versions to load smoothly without losing vehicle data.

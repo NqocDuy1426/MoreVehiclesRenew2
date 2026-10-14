@@ -1,12 +1,12 @@
 "workshopitem"
 {
-	"appid" "255710"
-	"publishedfileid" "0"
-	"contentfolder" "/Users/nqocduy/CS_MoreVehiclesRenew2/content"
-	"previewfile" "/Users/nqocduy/CS_MoreVehiclesRenew2/preview-image.png"
-	"visibility" "0"
-	"title" "More Vehicles Renew 2 by NgocDuy"
-	"description" "[h1]🚗 MORE VEHICLES RENEW 2 🚗[/h1]
+	"appid"		"255710"
+	"publishedfileid"		"3819832722"
+	"contentfolder"		"/Users/nqocduy/CS_MoreVehiclesRenew2/content"
+	"previewfile"		"/Users/nqocduy/CS_MoreVehiclesRenew2/preview-image.png"
+	"visibility"		"0"
+	"title"		"More Vehicles Renew 2 by NgocDuy"
+	"description"		"[h1]🚗 MORE VEHICLES RENEW 2 🚗[/h1]
 [b]The Definitive 65K/131K Vehicle Limit Breaker for Cities: Skylines[/b]
 [i]Completely modernized, independent, and stabilized by NgocDuy[/i]
 
@@ -44,5 +44,5 @@ That happens because vanilla [b]Cities: Skylines caps moving vehicles at only 16
 
 [hr][/hr]
 [i]Developed with care for large city builders by NgocDuy.[/i]"
-	"changenote" "Initial release: More Vehicles Renew 2 by NgocDuy"
+	"changenote"		"Initial release: More Vehicles Renew 2 by NgocDuy"
 }

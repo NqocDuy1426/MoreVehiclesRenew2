@@ -19,21 +19,21 @@ Expands the hardcoded base game vehicle limits to the maximum mathematical bound
 
 ---
 
-## ⚡ The 4 Core Breakthroughs (Bộ 4 Đột Phá Công Nghệ)
+## ⚡ The 4 Core Breakthrough Technologies
 
-### 1. 👻 Ghost & Stuck Vehicle Annihilator (Triệt Tiêu Dòng Xe Chết)
+### 1. 👻 Ghost & Stuck Vehicle Annihilator
 - **The Problem**: Demolishing roads often left orphaned vehicles floating in mid-air along destroyed segments, occupying thousands of vehicle slots permanently.
 - **The Solution**: Hooks into `NetManager.ReleaseSegmentImplementation` to instantly dissolve any vehicles stranded on demolished segments. Includes an inline slice watchdog during simulation frames to cleanly release permanent deadlocks and vehicles with destroyed target buildings.
 
-### 2. 🚀 Turbo Spawn Dispatcher (Siêu Tốc Độ Phục Hồi Xe)
+### 2. 🚀 Turbo Spawn Dispatcher
 - **The Problem**: In vanilla, `TransferManager` only matches 1 material per frame, meaning it takes 15–20 minutes to respawn vehicles after clearing traffic, starving commercial buildings and causing total economic collapse.
 - **The Solution**: Dynamically accelerates transfer matching by 4x when vehicle count is below 58,000. Cycles through multiple complementary frame phases in a single tick, fully repopulating 60,000 city vehicles in 30–60 seconds!
 
-### 3. 🛡️ Emergency Slot Reclaimer (Bộ Đệm Không Bao Giờ Nghẽn)
+### 3. 🛡️ Emergency Slot Reclaimer
 - **The Problem**: When vehicle count hits 65,535, vanilla `CreateVehicle` returns `false`, causing shops and factories to fail to spawn delivery trucks and abandon with "Not enough buyers/goods".
 - **The Solution**: If all 65,535 slots are completely exhausted, automatically reclaims 1 deadlocked or stagnant ghost vehicle in real-time, guaranteeing that critical service and freight vehicles can always spawn without dropping deliveries.
 
-### 4. 📦 Smart Logistics Multiplier (Sức Tải 260K Phương Tiện)
+### 4. 📦 Smart Logistics Multiplier
 - **The Problem**: Huge cities (500k+ pop) need 30k–40k trucks just for baseline goods deliveries.
 - **The Solution**: Safely doubles the payload capacity of CargoTrucks and GarbageTrucks. Halves the number of freight trucks needed on city streets, effectively granting a 65k vehicle city the logistical throughput of **over 260,000 vehicles**!
 

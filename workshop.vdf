@@ -12,52 +12,63 @@
 
 [hr][/hr]
 
-[h1]🌟 OVERVIEW: CAPACITY EXPANSION[/h1]
+[h1]🌟 OVERVIEW: MASSIVE CAPACITY EXPANSION[/h1]
+Have you noticed that as your metropolis reaches 300,000 - 500,000+ citizens, garbage trucks stop dispatching, cargo delivery vans vanish, and public transit lines run out of available vehicles?
+That happens because vanilla [b]Cities: Skylines caps moving vehicles at only 16,384[/b]!
+
+[b]More Vehicles Renew 2[/b] safely pushes the game engine to its absolute mathematical limits:
 [list]
 [*] [b]Active Moving Vehicles:[/b] [b]65,536[/b] (Vanilla: 16,384) — [b]400% Capacity![/b]
 [*] [b]Parked Vehicles:[/b] [b]65,536[/b] (Vanilla: 32,768) — [b]200% Capacity![/b]
 [*] [b]Total Vehicles Tracked:[/b] [b]131,072[/b]
-[*] [b]Real-World Logistics Throughput:[/b] [b]Equivalent to 260,000+ vehicles![/b]
+[*] [b]Real-World Logistics Throughput:[/b] [b]Equivalent to over 260,000 vehicles![/b]
 [/list]
 
 [hr][/hr]
 
-[h1]⚡ THE 4 CORE BREAKTHROUGHS (BỘ 4 ĐỘT PHÁ CÔNG NGHỆ)[/h1]
+[h1]⚡ THE 4 CORE BREAKTHROUGH TECHNOLOGIES[/h1]
 
-[h2]1. 👻 Ghost & Stuck Vehicle Annihilator (Triệt Tiêu Dòng Xe Chết)[/h2]
+[h2]1. 👻 Ghost & Stuck Vehicle Annihilator[/h2]
 [list]
-[*] [b]The Problem:[/b] Demolishing jammed roads frequently leaves orphaned vehicles floating in the air on deleted segments, permanently taking up thousands of vehicle slots.
-[*] [b]The Breakthrough:[/b] Directly hooks [b]NetManager.ReleaseSegmentImplementation[/b] to dissolve any vehicles stranded on demolished segments in real time. Plus an inline simulation frame slice watchdog that safely reclaims deadlocked vehicles.
+[*] [b]The Problem:[/b] When you bulldoze or reconfigure congested roads, vanilla and modded games frequently leave 'ghost vehicles' floating in mid-air along the destroyed segments. These orphaned vehicles never reach their destinations and permanently hog thousands of vehicle slots.
+[*] [b]The Breakthrough:[/b] Directly hooks [b]NetManager.ReleaseSegmentImplementation[/b] to instantly dissolve any vehicles stranded on demolished segments in real time. In addition, an inline frame-slice watchdog automatically reclaims permanent deadlocks and vehicles with destroyed target destinations.
 [/list]
 
-[h2]2. 🚀 Turbo Spawn Dispatcher (Siêu Tốc Độ Phục Hồi Xe)[/h2]
+[h2]2. 🚀 Turbo Spawn Dispatcher[/h2]
 [list]
-[*] [b]The Problem:[/b] In vanilla, TransferManager only matches 1 material per frame, meaning it takes 15–20 minutes to respawn vehicles after clearing traffic, starving commercial stores and triggering economic collapse.
-[*] [b]The Breakthrough:[/b] Quadruples (4x) transfer matching when active vehicle demand is high. Fully repopulates city logistics across 60,000 vehicles in just [b]30–60 seconds[/b]!
+[*] [b]The Problem:[/b] In vanilla, TransferManager only matches 1 material per frame, meaning after clearing traffic or loading a massive city, it takes 15–20 minutes to respawn vehicles. During this time, commercial stores starve and trigger city-wide economic collapse.
+[*] [b]The Breakthrough:[/b] Automatically quadruples (4x) transfer matching when active vehicle demand is high. It cycles through multiple complementary frame phases in a single tick, fully repopulating your city's 60,000 logistics vehicles in just [b]30–60 seconds[/b]!
 [/list]
 
-[h2]3. 🛡️ Emergency Slot Reclaimer (Bộ Đệm Không Bao Giờ Nghẽn)[/h2]
+[h2]3. 🛡️ Emergency Slot Reclaimer[/h2]
 [list]
-[*] [b]The Problem:[/b] When vehicle count hits 65,535, vanilla CreateVehicle returns false, causing factories to abandon with 'Not enough buyers/goods'.
-[*] [b]The Breakthrough:[/b] If all 65,535 slots are exhausted, automatically reclaims 1 stagnant ghost vehicle, guaranteeing that essential delivery and emergency vehicles [b]always spawn successfully[/b].
+[*] [b]The Problem:[/b] When vehicle count approaches the 65,535 limit, vanilla CreateVehicle returns false. Factories and shops fail to spawn delivery trucks and abandon with 'Not enough buyers/goods'.
+[*] [b]The Breakthrough:[/b] If all 65,535 slots are completely exhausted, the mod automatically reclaims 1 stagnant ghost vehicle in real time, guaranteeing that essential freight, garbage, police, and emergency vehicles [b]always spawn without dropping deliveries[/b].
 [/list]
 
-[h2]4. 📦 Smart Logistics Multiplier (Sức Tải 260K Phương Tiện)[/h2]
+[h2]4. 📦 Smart Logistics Multiplier[/h2]
 [list]
-[*] [b]The Breakthrough:[/b] Doubles the payload capacity of CargoTrucks and GarbageTrucks. Halves the number of freight trucks needed on city streets, granting a 65k vehicle city the logistical throughput of [b]over 260,000 vehicles[/b]!
+[*] [b]The Problem:[/b] Metropolises with 500k+ population require 30,000–40,000 delivery trucks just for baseline commercial goods.
+[*] [b]The Breakthrough:[/b] Safely doubles the payload capacity of CargoTrucks and GarbageTrucks. Halves the number of freight trucks needed on city streets, effectively giving a 65k vehicle city the logistical throughput of [b]over 260,000 vehicles[/b]!
+[/list]
+
+[hr][/hr]
+
+[h1]⚠️ COMPATIBILITY & ECOSYSTEM[/h1]
+[list]
+[*] [b]Requires CitiesHarmony:[/b] Standard Harmony 2 dependency.
+[*] [b]Do NOT Run Concurrently:[/b] Please disable or unsubscribe from original More Vehicles (1764208250) or More Vehicles Renewed v1 (3684679695) before activating.
+[*] [b]100% Compatible:[/b] Fully tested and operational with [b]TM:PE (Traffic Manager)[/b], [b]More Network Capacity Renew[/b], [b]Improved Public Transport 2/3[/b], [b]Advanced Vehicle Options (AVO)[/b], and [b]Loading Screen Mod (LSM)[/b].
+[*] [b]Safe Savegame Migration:[/b] Seamlessly loads existing cities created with older More Vehicles editions without any vehicle data loss.
 [/list]
 
 [hr][/hr]
 
-[h1]⚠️ COMPATIBILITY & REQUIREMENTS[/h1]
-[list]
-[*] Requires [b]CitiesHarmony[/b] (standard Harmony 2 dependency).
-[*] [b]DO NOT[/b] run concurrently with original More Vehicles or More Vehicles Renewed v1 (disable or unsubscribe from older versions).
-[*] 100% compatible with [b]TM:PE[/b], [b]More Network Capacity Renew[/b], [b]Improved Public Transport 2/3[/b], [b]AVO[/b], and [b]Loading Screen Mod[/b].
-[*] Full savegame backward and forward compatibility.
-[/list]
+[h1]🔧 OPEN SOURCE & REPOSITORY[/h1]
+Source code is open source and available on GitHub:
+[b]GitHub:[/b] https://github.com/NqocDuy1426/MoreVehiclesRenew2
 
 [hr][/hr]
-[i]Developed with care for large city builders by NgocDuy.[/i]"
-	"changenote"		"Release v2.0: The 4 Core Breakthroughs (Ghost Vehicle Annihilator, Turbo Spawn Dispatcher, Emergency Slot Reclaimer, Smart Logistics Multiplier)"
+[i]Engineered with precision for megacity builders by NgocDuy.[/i]"
+	"changenote"		"Update official description to 100% English with full technical documentation"
 }

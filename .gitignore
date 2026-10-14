@@ -1,0 +1,11 @@
+# Build artifacts
+*.dll
+*.exe
+*.mdb
+*.pdb
+obj/
+bin/
+
+# OS files
+.DS_Store
+Thumbs.db

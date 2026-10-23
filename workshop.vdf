@@ -70,5 +70,5 @@ Source code is open source and available on GitHub:
 
 [hr][/hr]
 [i]Engineered with precision for megacity builders by NgocDuy.[/i]"
-	"changenote"		"Update official description to 100% English with full technical documentation"
+	"changenote"		"v2.0.1: Fix vehicle route truncation and prevent confused vehicles from freezing at junctions. Seamless path visualization and proactive deadlock recovery."
 }

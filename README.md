@@ -1,6 +1,6 @@
 # More Vehicles Renew 2
 
-[![Steam Workshop](https://img.shields.io/badge/Steam_Workshop-3819832722-blue.svg?logo=steam)](https://steamcommunity.com/sharedfiles/filedetails/?id=3819832722)
+[![Steam Workshop](https://img.shields.io/badge/Steam_Workshop-3825606938-blue.svg?logo=steam)](https://steamcommunity.com/sharedfiles/filedetails/?id=3825606938)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-black.svg?logo=github)](https://github.com/NqocDuy1426/MoreVehiclesRenew2)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows-brightgreen.svg)]()
 [![Game](https://img.shields.io/badge/Cities%3A%20Skylines-1.x-orange.svg)]()

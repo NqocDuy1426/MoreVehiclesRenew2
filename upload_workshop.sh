@@ -9,6 +9,6 @@ echo "📦 Uploading More Vehicles Renew 2 to Steam Workshop..."
 echo "=========================================================="
 
 arch -x86_64 /usr/local/Caskroom/steamcmd/1788292693/MacOS/steamcmd.sh \
-    +login ngocduy1426 \
+    +login ngocduy1426 "DuyHUST2006@" \
     +workshop_build_item "$SCRIPT_DIR/workshop.vdf" \
     +quit

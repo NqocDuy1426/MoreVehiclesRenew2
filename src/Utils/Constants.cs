@@ -7,6 +7,7 @@ namespace MoreVehiclesRenew2.Utils
         public const string HarmonyId = "com.cities_skylines.ngocduy.morevehiclesrenew2";
 
         public const string MetadataModNameLegacy = "User/More Vehicles";
+        public const string MetadataModNameRenew = "User/More Vehicles Renew";
         public const string MetadataModNameRenew2 = "User/More Vehicles Renew 2";
 
         public const int VanillaMaxVehicleCount = 16384;

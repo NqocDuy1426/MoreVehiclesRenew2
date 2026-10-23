@@ -139,10 +139,11 @@ namespace MoreVehiclesRenew2
                 {
                     metaData.m_modOverride = new Dictionary<string, bool>();
                 }
-                // Stamp both legacy key for backwards compatibility and Renew 2 key
+                // Stamp all 3 keys (More Vehicles, More Vehicles Renew, More Vehicles Renew 2) for 100% cross-mod compatibility
                 metaData.m_modOverride[Constants.MetadataModNameLegacy] = true;
+                metaData.m_modOverride[Constants.MetadataModNameRenew] = true;
                 metaData.m_modOverride[Constants.MetadataModNameRenew2] = true;
-                Log.Info("More Vehicles Renew 2 recorded mod overrides in SimulationMetaData.");
+                Log.Info("More Vehicles Renew 2 recorded mod overrides for More Vehicles, Renew, and Renew 2 in SimulationMetaData.");
             }
 
             // Breakthrough 4: Apply Smart Logistics Multiplier (2x freight & service vehicle capacity)

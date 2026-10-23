@@ -156,14 +156,12 @@ namespace MoreVehiclesRenew2.Patches
                 var modOverride = Singleton<SimulationManager>.instance.m_metaData?.m_modOverride;
                 if (modOverride == null) return false;
 
-                bool val;
-                if (modOverride.TryGetValue(Constants.MetadataModNameRenew2, out val) && val)
+                foreach (var kvp in modOverride)
                 {
-                    return true;
-                }
-                if (modOverride.TryGetValue(Constants.MetadataModNameLegacy, out val) && val)
-                {
-                    return true;
+                    if (kvp.Value && !string.IsNullOrEmpty(kvp.Key) && kvp.Key.IndexOf("More Vehicles", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        return true;
+                    }
                 }
                 return false;
             }

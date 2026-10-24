@@ -141,40 +141,26 @@ namespace MoreVehiclesRenew2.Breakthroughs
                         }
                     }
 
-                    // 2. Confused ("Hoang mang") & Deadlocked Vehicle Annihilator & Rescuer
-                    if (vehicles[i].m_blockCounter >= 75 && vehicles[i].GetLastFrameVelocity().sqrMagnitude < 0.001f)
+                    // 2. Check for permanent deadlock (blocked for > 250 frames with zero velocity and invalid target)
+                    if (vehicles[i].m_blockCounter >= 250 && vehicles[i].GetLastFrameVelocity().sqrMagnitude < 0.0001f)
                     {
-                        // Never kill active emergency vehicles with sirens
+                        // Check if emergency vehicle
                         if ((vehicles[i].m_flags & (Vehicle.Flags.Emergency1 | Vehicle.Flags.Emergency2)) != 0)
                         {
                             continue;
                         }
 
-                        // Phase 1: Gentle unstick & re-pathing for vehicles starting to stall (blockCounter 75-100)
-                        if (vehicles[i].m_blockCounter < 100)
+                        // Check if destination building is destroyed or non-existent
+                        ushort target = vehicles[i].m_targetBuilding;
+                        if (target != 0 && (bm.m_buildings.m_buffer[target].m_flags & Building.Flags.Created) == 0)
                         {
-                            if (vehicles[i].m_targetPos0.w < 0.1f)
-                            {
-                                vehicles[i].m_targetPos0.w = 1.5f;
-                                vehicles[i].m_targetPos1.w = 1.5f;
-                                vehicles[i].m_targetPos2.w = 1.5f;
-                                vehicles[i].m_targetPos3.w = 1.5f;
-                            }
-
-                            if (path == 0 && (vehicles[i].m_flags & Vehicle.Flags.WaitingPath) == 0)
-                            {
-                                VehicleInfo vInfo = vehicles[i].Info;
-                                if (vInfo != null && vInfo.m_vehicleAI != null)
-                                {
-                                    TriggerInvalidPath(vInfo.m_vehicleAI, (ushort)i, ref vehicles[i]);
-                                }
-                            }
+                            vm.ReleaseVehicle((ushort)i);
+                            continue;
                         }
-                        // Phase 2: Stagnant Confused / Congested vehicles (blockCounter >= 100)
-                        else
+
+                        // Check if vehicle has no path and cannot spawn
+                        if (path == 0 && (vehicles[i].m_flags & Vehicle.Flags.WaitingPath) == 0)
                         {
-                            // If destination building is missing/destroyed, or path is permanently dead, or stagnant in Hoang Mang for >= 100 frames:
-                            // Safely release the vehicle so it never forms a permanent roadblock or blocks trailing cars!
                             vm.ReleaseVehicle((ushort)i);
                             continue;
                         }
@@ -185,27 +171,6 @@ namespace MoreVehiclesRenew2.Breakthroughs
             {
                 Log.Warning("InspectAndCleanFrameSlice error: " + ex.Message);
             }
-        }
-
-        private static readonly MethodInfo InvalidPathMethod = typeof(VehicleAI).GetMethod(
-            "InvalidPath",
-            BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
-            null,
-            new Type[] { typeof(ushort), typeof(Vehicle).MakeByRefType(), typeof(ushort), typeof(Vehicle).MakeByRefType() },
-            null);
-
-        private static void TriggerInvalidPath(VehicleAI ai, ushort vehicleId, ref Vehicle vehicleData)
-        {
-            try
-            {
-                if (InvalidPathMethod != null)
-                {
-                    object[] parameters = new object[] { vehicleId, vehicleData, vehicleId, vehicleData };
-                    InvalidPathMethod.Invoke(ai, parameters);
-                    vehicleData = (Vehicle)parameters[1];
-                }
-            }
-            catch { }
         }
 
         public static IPatch ReleaseSegmentPatch { get; } = new NetManager_ReleaseSegmentImplementation();

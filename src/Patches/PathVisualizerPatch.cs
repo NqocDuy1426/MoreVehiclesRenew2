@@ -22,22 +22,7 @@ namespace MoreVehiclesRenew2.Patches
 
             private static IEnumerable<CodeInstruction> Transform(IEnumerable<CodeInstruction> instructions)
             {
-                var replacedConstants = CodeProcessor.ReplaceOperands(instructions, Constants.VanillaMaxVehicleCount, Constants.ModdedMaxVehicleCount);
-                foreach (var inst in replacedConstants)
-                {
-                    // If instruction is reading NetSegment.m_modifiedIndex to compare against PathUnit.m_buildIndex:
-                    // Pop the NetSegment reference and load 0 instead.
-                    // This prevents PathVisualizer from prematurely aborting route line rendering ("đứt quãng")!
-                    if (inst.opcode == System.Reflection.Emit.OpCodes.Ldfld && inst.operand != null && inst.operand.ToString().Contains("m_modifiedIndex"))
-                    {
-                        yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Pop);
-                        yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_I4_0);
-                    }
-                    else
-                    {
-                        yield return inst;
-                    }
-                }
+                return CodeProcessor.ReplaceOperands(instructions, Constants.VanillaMaxVehicleCount, Constants.ModdedMaxVehicleCount);
             }
         }
 

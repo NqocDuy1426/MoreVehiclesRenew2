@@ -73,9 +73,7 @@ namespace MoreVehiclesRenew2
                 // Breakthrough 2: Turbo Spawner on Transfer Matching
                 MoreVehiclesRenew2.Breakthroughs.TurboSpawnDispatcher.SimulationStepPatch,
                 // Breakthrough 3: Emergency Vehicle Slot Reclaimer
-                MoreVehiclesRenew2.Breakthroughs.EmergencySlotReclaimer.CreateVehiclePatch,
-                // Breakthrough 4: Path Continuity & Vehicle Freeze Armor (prevents road modifiedIndex desync)
-                PathUnitPatch.GetPosition
+                MoreVehiclesRenew2.Breakthroughs.EmergencySlotReclaimer.CreateVehiclePatch
             };
 
             patcher = new MethodPatcher(Constants.HarmonyId, array);

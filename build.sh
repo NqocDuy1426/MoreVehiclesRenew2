@@ -43,6 +43,13 @@ mkdir -p "$SCRIPT_DIR/content"
 cp "$MOD_NAME.dll" "$SCRIPT_DIR/content/"
 cp "$CITIES_HARMONY_API_DLL" "$SCRIPT_DIR/content/"
 
+WORKSHOP_DIR="$HOME/Library/Application Support/Steam/steamapps/workshop/content/255710/3825606938"
+echo "4️⃣ Deploying to Steam Workshop directory ($WORKSHOP_DIR)..."
+mkdir -p "$WORKSHOP_DIR"
+cp "$MOD_NAME.dll" "$WORKSHOP_DIR/"
+cp "$CITIES_HARMONY_API_DLL" "$WORKSHOP_DIR/"
+[ -f preview-image.png ] && cp preview-image.png "$WORKSHOP_DIR/PreviewImage.png"
+
 echo "=========================================================="
 echo "🎉 DEPLOYMENT COMPLETE!"
 echo "Files in $MOD_DIR:"

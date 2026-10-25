@@ -17,7 +17,12 @@ namespace MoreVehiclesRenew2.Patches
         {
             protected override MethodInfo GetMethod()
             {
-                return typeof(VehicleManager.Data).GetMethod("Deserialize", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(DataSerializer) }, null);
+                return typeof(VehicleManager.Data).GetMethod(
+                    "Deserialize",
+                    BindingFlags.Instance | BindingFlags.Public,
+                    null,
+                    new Type[] { typeof(DataSerializer) },
+                    null);
             }
 
             private static int FindLoadLocalInstructionForStoreLocal(List<CodeInstruction> instructions, int startIndex, CodeInstruction storeLocalInstruction, bool searchBackwards)
@@ -151,16 +156,29 @@ namespace MoreVehiclesRenew2.Patches
                 return true;
             }
 
+            /// <summary>
+            /// Seamlessly detects saves created with More Vehicles (original), More Vehicles Renew,
+            /// More Vehicles Renewed, or More Vehicles Renew 2.
+            /// </summary>
             private static bool IsModEnabled()
             {
                 var modOverride = Singleton<SimulationManager>.instance.m_metaData?.m_modOverride;
-                if (modOverride == null) return false;
-
-                foreach (var kvp in modOverride)
+                if (modOverride != null)
                 {
-                    if (kvp.Value && !string.IsNullOrEmpty(kvp.Key) && kvp.Key.IndexOf("More Vehicles", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if ((modOverride.TryGetValue(Constants.MetadataModNameLegacy, out bool v1) && v1) ||
+                        (modOverride.TryGetValue(Constants.MetadataModNameRenew, out bool v2) && v2) ||
+                        (modOverride.TryGetValue(Constants.MetadataModNameRenew2, out bool v3) && v3) ||
+                        (modOverride.TryGetValue(Constants.MetadataModNameRenewed, out bool v4) && v4))
                     {
                         return true;
+                    }
+
+                    foreach (var kvp in modOverride)
+                    {
+                        if (kvp.Value && !string.IsNullOrEmpty(kvp.Key) && kvp.Key.IndexOf("More Vehicles", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            return true;
+                        }
                     }
                 }
                 return false;
@@ -185,11 +203,124 @@ namespace MoreVehiclesRenew2.Patches
             }
         }
 
+        /// <summary>
+        /// Automatically stamps all 3 compatibility keys into SimulationMetaData before save serialization,
+        /// ensuring that the save can be safely opened by More Vehicles, More Vehicles Renew, and More Vehicles Renew 2.
+        /// </summary>
+        private sealed class VehicleManager_Data_Serialize : PatchBase
+        {
+            protected override MethodInfo GetMethod()
+            {
+                return typeof(VehicleManager.Data).GetMethod(
+                    "Serialize",
+                    BindingFlags.Instance | BindingFlags.Public,
+                    null,
+                    new Type[] { typeof(DataSerializer) },
+                    null);
+            }
+
+            private static void Prefix()
+            {
+                var metaData = Singleton<SimulationManager>.instance.m_metaData;
+                if (metaData != null)
+                {
+                    lock (metaData)
+                    {
+                        if (metaData.m_modOverride == null)
+                        {
+                            metaData.m_modOverride = new Dictionary<string, bool>();
+                        }
+                        metaData.m_modOverride[Constants.MetadataModNameLegacy] = true;
+                        metaData.m_modOverride[Constants.MetadataModNameRenew] = true;
+                        metaData.m_modOverride[Constants.MetadataModNameRenew2] = true;
+                        metaData.m_modOverride[Constants.MetadataModNameRenewed] = true;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Postfix on VehicleManager.Data.AfterDeserialize:
+        /// Sweeps all 65,536 vehicle slots upon level load to permanently purge
+        /// invisible vehicles (missing assets/AI) and orphaned trailers.
+        /// </summary>
+        private sealed class VehicleManager_Data_AfterDeserialize : PatchBase
+        {
+            protected override MethodInfo GetMethod()
+            {
+                return typeof(VehicleManager.Data).GetMethod(
+                    "AfterDeserialize",
+                    BindingFlags.Instance | BindingFlags.Public,
+                    null,
+                    new Type[] { typeof(DataSerializer) },
+                    null);
+            }
+
+            private static void Postfix()
+            {
+                try
+                {
+                    VehicleManager vm = Singleton<VehicleManager>.instance;
+                    if (vm == null || vm.m_vehicles == null || vm.m_vehicles.m_buffer == null)
+                    {
+                        return;
+                    }
+
+                    Vehicle[] vehicles = vm.m_vehicles.m_buffer;
+                    int ghostCount = 0;
+                    int orphanedCount = 0;
+
+                    for (int i = 1; i < vehicles.Length; i++)
+                    {
+                        if ((vehicles[i].m_flags & Vehicle.Flags.Created) == 0)
+                        {
+                            continue;
+                        }
+
+                        // 1. Invisible vehicle check: missing or corrupted prefab / AI
+                        VehicleInfo info = vehicles[i].Info;
+                        if (info == null || info.m_prefabDataIndex < 0 || info.m_vehicleAI == null)
+                        {
+                            vm.ReleaseVehicle((ushort)i);
+                            ghostCount++;
+                            continue;
+                        }
+
+                        // 2. Orphaned trailer check
+                        if (vehicles[i].m_leadingVehicle != 0)
+                        {
+                            ushort leader = vehicles[i].m_leadingVehicle;
+                            if (leader >= vehicles.Length || (vehicles[leader].m_flags & Vehicle.Flags.Created) == 0)
+                            {
+                                vm.ReleaseVehicle((ushort)i);
+                                orphanedCount++;
+                                continue;
+                            }
+                        }
+                    }
+
+                    if (ghostCount > 0 || orphanedCount > 0)
+                    {
+                        Log.Info($"[SaveLoadSanitizer] Successfully dissolved {ghostCount} invisible ghost vehicles and {orphanedCount} orphaned trailers upon save loading.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning("[SaveLoadSanitizer] Warning: " + ex.Message);
+                }
+            }
+        }
+
         private sealed class VehicleManager_UpdateData : PatchBase
         {
             protected override MethodInfo GetMethod()
             {
-                return typeof(VehicleManager).GetMethod("UpdateData", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(SimulationManager.UpdateMode) }, null);
+                return typeof(VehicleManager).GetMethod(
+                    "UpdateData",
+                    BindingFlags.Instance | BindingFlags.Public,
+                    null,
+                    new Type[] { typeof(SimulationManager.UpdateMode) },
+                    null);
             }
 
             private static IEnumerable<CodeInstruction> Transform(IEnumerable<CodeInstruction> instructions)
@@ -205,7 +336,12 @@ namespace MoreVehiclesRenew2.Patches
         {
             protected override MethodInfo GetMethod()
             {
-                return typeof(VehicleManager).GetMethod("AirlineModified", BindingFlags.Instance | BindingFlags.Public, null, Type.EmptyTypes, null);
+                return typeof(VehicleManager).GetMethod(
+                    "AirlineModified",
+                    BindingFlags.Instance | BindingFlags.Public,
+                    null,
+                    Type.EmptyTypes,
+                    null);
             }
 
             private static bool Prefix(VehicleManager __instance)
@@ -230,7 +366,12 @@ namespace MoreVehiclesRenew2.Patches
         {
             protected override MethodInfo GetMethod()
             {
-                return typeof(VehicleManager).GetMethod("SimulationStepImpl", BindingFlags.Instance | BindingFlags.NonPublic, null, new Type[] { typeof(int) }, null);
+                return typeof(VehicleManager).GetMethod(
+                    "SimulationStepImpl",
+                    BindingFlags.Instance | BindingFlags.NonPublic,
+                    null,
+                    new Type[] { typeof(int) },
+                    null);
             }
 
             private static IEnumerable<CodeInstruction> Transform(IEnumerable<CodeInstruction> instructions)
@@ -253,6 +394,8 @@ namespace MoreVehiclesRenew2.Patches
         }
 
         public static IPatch DataDeserialize { get; } = new VehicleManager_Data_Deserialize();
+        public static IPatch DataSerialize { get; } = new VehicleManager_Data_Serialize();
+        public static IPatch DataAfterDeserialize { get; } = new VehicleManager_Data_AfterDeserialize();
         public static IPatch UpdateData { get; } = new VehicleManager_UpdateData();
         public static IPatch AirlineModified { get; } = new VehicleManager_AirlineModified();
         public static IPatch SimulationStepImpl { get; } = new VehicleManager_SimulationStepImpl();

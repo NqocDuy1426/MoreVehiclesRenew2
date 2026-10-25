@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ColossalFramework;
@@ -18,8 +19,9 @@ namespace MoreVehiclesRenew2.Utils
         // Old More Vehicles variants that shouldn't run concurrently
         public static readonly ulong[] LegacyMoreVehiclesIds = new ulong[]
         {
-            1764208250uL, // Original More Vehicles
-            3684679695uL  // More Vehicles Renewed v1
+            1764208250uL, // Original More Vehicles (dymanoid)
+            2933830206uL, // More Vehicles Renewed (t1a2l)
+            3684679695uL  // More Vehicles Renewed re-upload
         };
 
         public static bool AreAnyIncompatibleModsActive()
@@ -54,6 +56,35 @@ namespace MoreVehiclesRenew2.Utils
                 }
             }
             return conflicts;
+        }
+
+        /// <summary>
+        /// Automatically disables any active legacy More Vehicles mods so that switching
+        /// to More Vehicles Renew 2 requires zero manual uninstallation and causes no crashes.
+        /// </summary>
+        public static void AutoDeactivateLegacyMods(IUserMod selfMod)
+        {
+            try
+            {
+                foreach (PluginManager.PluginInfo p in Singleton<PluginManager>.instance.GetPluginsInfo())
+                {
+                    if (p.isEnabled && p.userModInstance != selfMod)
+                    {
+                        ulong id = p.publishedFileID.AsUInt64;
+                        bool isLegacy = LegacyMoreVehiclesIds.Contains(id) ||
+                            (!string.IsNullOrEmpty(p.name) && p.name.ToLower().Contains("morevehicles") && !p.name.Contains("Renew 2"));
+                        if (isLegacy)
+                        {
+                            p.isEnabled = false;
+                            Log.Info($"[Compatibility] Automatically deactivated legacy conflicting mod '{p.name}' (ID: {id}) to ensure seamless transition to More Vehicles Renew 2.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Warning("[Compatibility] AutoDeactivateLegacyMods warning: " + ex.Message);
+            }
         }
     }
 }

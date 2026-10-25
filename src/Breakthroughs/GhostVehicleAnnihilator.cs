@@ -9,9 +9,10 @@ using UnityEngine;
 namespace MoreVehiclesRenew2.Breakthroughs
 {
     /// <summary>
-    /// Breakthrough 1: Ghost & Stuck Vehicle Annihilator
-    /// Instantly dissolves ghost vehicles stranded on bulldozed/demolished roads
-    /// and safely clears permanent deadlocks to free up active vehicle slots.
+    /// Breakthrough 1: Ghost & Invisible Vehicle Annihilator
+    /// Instantly dissolves invisible vehicles (missing or corrupted prefabs/AI),
+    /// orphaned trailers, vehicles stranded on bulldozed roads, and permanent deadlocks
+    /// to completely eliminate phantom roadblocks and restore crystal-clear traffic routes.
     /// </summary>
     internal static class GhostVehicleAnnihilator
     {
@@ -43,17 +44,6 @@ namespace MoreVehiclesRenew2.Breakthroughs
                         return;
                     }
 
-                    // Scan lanes attached to this segment before they are deallocated
-                    uint laneId = data.m_lanes;
-                    int laneCount = 0;
-                    while (laneId != 0 && laneCount < 64)
-                    {
-                        // Check spatial vehicle grid around segment bounds to unstick any hovering vehicles
-                        laneId = nm.m_lanes.m_buffer[laneId].m_nextLane;
-                        laneCount++;
-                    }
-
-                    // Emergency scan for vehicles on this segment
                     ScanAndReleaseVehiclesOnSegment(segment, vm, nm);
                 }
                 catch (Exception ex)
@@ -96,6 +86,7 @@ namespace MoreVehiclesRenew2.Breakthroughs
 
         /// <summary>
         /// Called from VehicleManager.SimulationStepImpl on the slice of 4,096 vehicles being simulated.
+        /// Cycles through all 65,536 vehicle slots every 16 frames.
         /// </summary>
         public static void InspectAndCleanFrameSlice(int startVehicle, int endVehicle)
         {
@@ -118,13 +109,31 @@ namespace MoreVehiclesRenew2.Breakthroughs
                         continue;
                     }
 
-                    // Only process vehicle leaders (trailers follow leaders)
-                    if (vehicles[i].m_leadingVehicle != 0)
+                    // 1. INVISIBLE VEHICLE ANNIHILATION: Missing or corrupted prefab / AI
+                    // When Info is null, the vehicle cannot render a 3D mesh (100% invisible)
+                    // and its AI never runs to move it, permanently blocking all traffic behind it!
+                    VehicleInfo info = vehicles[i].Info;
+                    if (info == null || info.m_prefabDataIndex < 0 || info.m_vehicleAI == null)
                     {
+                        vm.ReleaseVehicle((ushort)i);
                         continue;
                     }
 
-                    // 1. Check for orphaned path on deleted segment
+                    // 2. ORPHANED TRAILER ANNIHILATION
+                    // If a trailer's leader is destroyed or nonexistent, it sits paralyzed forever.
+                    if (vehicles[i].m_leadingVehicle != 0)
+                    {
+                        ushort leader = vehicles[i].m_leadingVehicle;
+                        if (leader >= vehicles.Length || (vehicles[leader].m_flags & Vehicle.Flags.Created) == 0)
+                        {
+                            vm.ReleaseVehicle((ushort)i);
+                            continue;
+                        }
+                        // Valid trailers are governed by their leader
+                        continue;
+                    }
+
+                    // 3. DESTROYED ROAD SEGMENT DETECTION
                     uint path = vehicles[i].m_path;
                     if (path != 0)
                     {
@@ -134,17 +143,17 @@ namespace MoreVehiclesRenew2.Breakthroughs
                             ushort segment = pm.m_pathUnits.m_buffer[path].GetPosition(posIdx).m_segment;
                             if (segment > 0 && (nm.m_segments.m_buffer[segment].m_flags & NetSegment.Flags.Created) == 0)
                             {
-                                // The segment under this vehicle has been destroyed! Clean it up!
                                 vm.ReleaseVehicle((ushort)i);
                                 continue;
                             }
                         }
                     }
 
-                    // 2. Check for permanent deadlock (blocked for > 250 frames with zero velocity and invalid target)
-                    if (vehicles[i].m_blockCounter >= 250 && vehicles[i].GetLastFrameVelocity().sqrMagnitude < 0.0001f)
+                    // 4. PERMANENT DEADLOCK / STALLED ROADBLOCK CLEARING
+                    // Detect vehicles stuck for >= 80 frames with zero velocity
+                    if (vehicles[i].m_blockCounter >= 80 && vehicles[i].GetLastFrameVelocity().sqrMagnitude < 0.0001f)
                     {
-                        // Check if emergency vehicle
+                        // Protect active emergency vehicles with sirens blaring
                         if ((vehicles[i].m_flags & (Vehicle.Flags.Emergency1 | Vehicle.Flags.Emergency2)) != 0)
                         {
                             continue;
@@ -160,6 +169,14 @@ namespace MoreVehiclesRenew2.Breakthroughs
 
                         // Check if vehicle has no path and cannot spawn
                         if (path == 0 && (vehicles[i].m_flags & Vehicle.Flags.WaitingPath) == 0)
+                        {
+                            vm.ReleaseVehicle((ushort)i);
+                            continue;
+                        }
+
+                        // Vehicle is deadlocked in traffic for >= 120 frames (2 full seconds of gridlock):
+                        // Safely release it to break the deadlock and allow the entire traffic line to flow!
+                        if (vehicles[i].m_blockCounter >= 120)
                         {
                             vm.ReleaseVehicle((ushort)i);
                             continue;

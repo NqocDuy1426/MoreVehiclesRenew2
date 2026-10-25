@@ -38,11 +38,8 @@ namespace MoreVehiclesRenew2
                 return;
             }
 
-            List<string> conflicts = Compatibility.GetActiveConflictingVehicleMods(this);
-            if (conflicts.Count > 0)
-            {
-                Log.Warning("Detected legacy vehicle mod(s) enabled: " + string.Join(", ", conflicts.ToArray()) + ". Please disable them to avoid conflict with More Vehicles Renew 2.");
-            }
+            // Automatically suppress and deactivate conflicting legacy More Vehicles mods
+            Compatibility.AutoDeactivateLegacyMods(this);
 
             Log.Info("More Vehicles Renew 2 is enabling...");
 
@@ -61,6 +58,8 @@ namespace MoreVehiclesRenew2
                 ResidentAIPatch.DoRandomMove,
                 TouristAIPatch.DoRandomMove,
                 VehicleManagerPatch.DataDeserialize,
+                VehicleManagerPatch.DataSerialize,
+                VehicleManagerPatch.DataAfterDeserialize,
                 VehicleManagerPatch.UpdateData,
                 VehicleManagerPatch.AirlineModified,
                 VehicleManagerPatch.SimulationStepImpl,
@@ -127,23 +126,32 @@ namespace MoreVehiclesRenew2
                 return;
             }
 
-            SimulationMetaData metaData = Singleton<SimulationManager>.instance.m_metaData;
-            if (metaData == null)
+            // Ensure no legacy vehicle mods are running
+            Compatibility.AutoDeactivateLegacyMods(this);
+
+            // Re-apply vehicle manager customization if needed
+            if (Singleton<VehicleManager>.instance.m_vehicles.m_buffer.Length != Constants.ModdedMaxVehicleCount)
             {
-                return;
+                Log.Info("More Vehicles Renew 2 is re-applying vehicle manager customization after level load.");
+                VehicleManagerCustomizer.Customize();
             }
 
-            lock (metaData)
+            SimulationMetaData metaData = Singleton<SimulationManager>.instance.m_metaData;
+            if (metaData != null)
             {
-                if (metaData.m_modOverride == null)
+                lock (metaData)
                 {
-                    metaData.m_modOverride = new Dictionary<string, bool>();
+                    if (metaData.m_modOverride == null)
+                    {
+                        metaData.m_modOverride = new Dictionary<string, bool>();
+                    }
+                    // Stamp all 4 keys (More Vehicles, More Vehicles Renew, More Vehicles Renewed, More Vehicles Renew 2) for 100% bidirectional cross-mod compatibility
+                    metaData.m_modOverride[Constants.MetadataModNameLegacy] = true;
+                    metaData.m_modOverride[Constants.MetadataModNameRenew] = true;
+                    metaData.m_modOverride[Constants.MetadataModNameRenew2] = true;
+                    metaData.m_modOverride[Constants.MetadataModNameRenewed] = true;
+                    Log.Info("More Vehicles Renew 2 recorded mod overrides for More Vehicles, Renew, and Renew 2 in SimulationMetaData.");
                 }
-                // Stamp all 3 keys (More Vehicles, More Vehicles Renew, More Vehicles Renew 2) for 100% cross-mod compatibility
-                metaData.m_modOverride[Constants.MetadataModNameLegacy] = true;
-                metaData.m_modOverride[Constants.MetadataModNameRenew] = true;
-                metaData.m_modOverride[Constants.MetadataModNameRenew2] = true;
-                Log.Info("More Vehicles Renew 2 recorded mod overrides for More Vehicles, Renew, and Renew 2 in SimulationMetaData.");
             }
 
             // Breakthrough 4: Apply Smart Logistics Multiplier (2x freight & service vehicle capacity)
@@ -156,7 +164,10 @@ namespace MoreVehiclesRenew2
             {
                 Log.Info("More Vehicles Renew 2 detected incompatible mods enabled; disabling...");
                 OnDisabled();
+                return;
             }
+
+            Compatibility.AutoDeactivateLegacyMods(this);
         }
     }
 }

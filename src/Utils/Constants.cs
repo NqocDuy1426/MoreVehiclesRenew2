@@ -3,7 +3,7 @@ namespace MoreVehiclesRenew2.Utils
     internal static class Constants
     {
         public const string ModName = "More Vehicles Renew 2";
-        public const string ModVersion = "2.0.1";
+        public const string ModVersion = "2.0.2";
         public const string HarmonyId = "com.cities_skylines.ngocduy.morevehiclesrenew2";
 
         public const string MetadataModNameLegacy = "User/More Vehicles";

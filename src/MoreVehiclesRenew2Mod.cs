@@ -69,8 +69,6 @@ namespace MoreVehiclesRenew2
                 VehicleLinkedListPatch.ReleaseVehicleImplementation,
                 // Breakthrough 1: Ghost Vehicle Annihilator on Demolished Roads
                 MoreVehiclesRenew2.Breakthroughs.GhostVehicleAnnihilator.ReleaseSegmentPatch,
-                // Breakthrough 2: Turbo Spawner on Transfer Matching
-                MoreVehiclesRenew2.Breakthroughs.TurboSpawnDispatcher.SimulationStepPatch,
                 // Breakthrough 3: Emergency Vehicle Slot Reclaimer
                 MoreVehiclesRenew2.Breakthroughs.EmergencySlotReclaimer.CreateVehiclePatch
             };

@@ -88,8 +88,15 @@ namespace MoreVehiclesRenew2.Breakthroughs
                     continue;
                 }
 
-                // If vehicle has high block counter (blocked for a long time) or zero speed
-                if (buffer[id].m_blockCounter >= 230 || (buffer[id].GetLastFrameVelocity().sqrMagnitude < 0.0001f && buffer[id].m_path == 0))
+                // Protect trains, aircraft, ships, and transit from emergency reclaim
+                VehicleInfo info = buffer[id].Info;
+                if (info != null && (info.m_vehicleAI is TrainAI || info.m_vehicleAI is AircraftAI || info.m_vehicleAI is ShipAI || info.m_vehicleAI is TramBaseAI))
+                {
+                    continue;
+                }
+
+                // If vehicle has high block counter (blocked for a long time) or zero speed without path
+                if (buffer[id].m_blockCounter >= 230 || (buffer[id].GetLastFrameVelocity().sqrMagnitude < 0.0001f && buffer[id].m_path == 0 && (buffer[id].m_flags & Vehicle.Flags.WaitingPath) == 0))
                 {
                     vm.ReleaseVehicle(id);
                     return;

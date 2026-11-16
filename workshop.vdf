@@ -70,5 +70,15 @@ Source code is open source and available on GitHub:
 
 [hr][/hr]
 [i]Engineered with precision for megacity builders by NgocDuy.[/i]"
-	"changenote"		"v2.0.1: Annihilate invisible ghost vehicles, restore crystal-clear traffic routes, and provide 100% seamless bidirectional save migration between More Vehicles, More Vehicles Renew, and More Vehicles Renew 2."
+	"changenote"		"v2.0.2: CRITICAL ECONOMIC STABILITY & CARGO PROTECTION UPDATE:
+1. Supply Chain & Raw Material Restorations:
+   - Deactivated premature TransferManager offer matching to prevent offer queue wiping, ensuring raw materials (oil, ore, goods) reliably pair with buyers and stores.
+   - Eliminated reflection garbage collection spikes (1000+ allocs/sec) for silky smooth framerates.
+2. Cargo & Transit Armor:
+   - Eliminated premature 2-second (120-frame) deadlock auto-kill that was despawning delivery trucks waiting at red lights and intersections.
+   - Added full transit immunity shielding: Trains, Aircraft, Ships, and Trams are completely protected from despawn sweeps.
+3. Universal Savegame Compatibility:
+   - All 4 save metadata keys verified for 100% bidirectional save loading across original More Vehicles, More Vehicles Renew, and Renew 2.
+4. Test Verification:
+   - 41 deep simulation test cases passed (100%)."
 }

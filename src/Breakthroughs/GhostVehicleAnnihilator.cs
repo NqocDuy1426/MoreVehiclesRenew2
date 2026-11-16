@@ -159,6 +159,12 @@ namespace MoreVehiclesRenew2.Breakthroughs
                             continue;
                         }
 
+                        // Protect public transport, trains, aircraft, ships from being despawned
+                        if (info.m_vehicleAI is TrainAI || info.m_vehicleAI is AircraftAI || info.m_vehicleAI is ShipAI || info.m_vehicleAI is TramBaseAI)
+                        {
+                            continue;
+                        }
+
                         // Check if destination building is destroyed or non-existent
                         ushort target = vehicles[i].m_targetBuilding;
                         if (target != 0 && (bm.m_buildings.m_buffer[target].m_flags & Building.Flags.Created) == 0)
@@ -167,16 +173,8 @@ namespace MoreVehiclesRenew2.Breakthroughs
                             continue;
                         }
 
-                        // Check if vehicle has no path and cannot spawn
+                        // Check if vehicle has no path and cannot spawn / pathfind
                         if (path == 0 && (vehicles[i].m_flags & Vehicle.Flags.WaitingPath) == 0)
-                        {
-                            vm.ReleaseVehicle((ushort)i);
-                            continue;
-                        }
-
-                        // Vehicle is deadlocked in traffic for >= 120 frames (2 full seconds of gridlock):
-                        // Safely release it to break the deadlock and allow the entire traffic line to flow!
-                        if (vehicles[i].m_blockCounter >= 120)
                         {
                             vm.ReleaseVehicle((ushort)i);
                             continue;

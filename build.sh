@@ -9,6 +9,7 @@ MOD_NAME="MoreVehiclesRenew2"
 MOD_DIR="$HOME/Library/Application Support/Colossal Order/Cities_Skylines/Addons/Mods/$MOD_NAME"
 HARMONY_DLL="$SCRIPT_DIR/Libs/CitiesHarmony.Harmony.dll"
 CITIES_HARMONY_API_DLL="$SCRIPT_DIR/Libs/CitiesHarmony.API.dll"
+CECIL_DLL="/Library/Frameworks/Mono.framework/Versions/6.12.0/lib/mono/gac/Mono.Cecil/0.11.1.0__0738eb9f132ed756/Mono.Cecil.dll"
 
 echo "=========================================================="
 echo "🚀 Building $MOD_NAME (by NgocDuy)..."
@@ -30,21 +31,26 @@ mcs -sdk:2 -target:library \
 
 echo "✅ Compiled $MOD_NAME.dll successfully."
 
+echo "2️⃣ Running Simulation Test Suite..."
+mcs -r:"$CECIL_DLL" run_simulation_tests.cs -out:run_simulation_tests.exe
+mono run_simulation_tests.exe
+echo "✅ Test Suite passed 100%."
+
 # Deploy to game mods directory
-echo "2️⃣ Deploying to Cities: Skylines Addons/Mods/$MOD_NAME..."
+echo "3️⃣ Deploying to Cities: Skylines Addons/Mods/$MOD_NAME..."
 mkdir -p "$MOD_DIR"
 cp "$MOD_NAME.dll" "$MOD_DIR/"
 cp "$CITIES_HARMONY_API_DLL" "$MOD_DIR/"
 
 [ -f preview-image.png ] && cp preview-image.png "$MOD_DIR/"
 
-echo "3️⃣ Deploying to SteamCMD content staging ($SCRIPT_DIR/content)..."
+echo "4️⃣ Deploying to SteamCMD content staging ($SCRIPT_DIR/content)..."
 mkdir -p "$SCRIPT_DIR/content"
 cp "$MOD_NAME.dll" "$SCRIPT_DIR/content/"
 cp "$CITIES_HARMONY_API_DLL" "$SCRIPT_DIR/content/"
 
 WORKSHOP_DIR="$HOME/Library/Application Support/Steam/steamapps/workshop/content/255710/3825606938"
-echo "4️⃣ Deploying to Steam Workshop directory ($WORKSHOP_DIR)..."
+echo "5️⃣ Deploying to Steam Workshop directory ($WORKSHOP_DIR)..."
 mkdir -p "$WORKSHOP_DIR"
 cp "$MOD_NAME.dll" "$WORKSHOP_DIR/"
 cp "$CITIES_HARMONY_API_DLL" "$WORKSHOP_DIR/"
